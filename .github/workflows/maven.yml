@@ -1,0 +1,25 @@
+name: Deploy to CloudHub 1.0
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  buildAndDeplyToCH:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+        
+    - name: Build with Maven
+      run: mvn clean deploy -DmuleDeploy -s settings.xml -DworkerType=MICRO -Dworkers=1 -Dregion=us-east-2 -Denvironment=Dev -Dcloudhub.application.name=eclerx-cicd-poc -DconnectedAppClientSecret=2AA40C3923a8486fB3A51283DDb8Ec7d -DconnectedAppClientId=1ff2107ae8f34f85a1c10ed14dceb81e -Dmule.env=dev
+
